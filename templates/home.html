@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={{url_for('static',filename='home.css')}}>
+    
+</head>
+<body>
+
+    
+    <header>
+            <ul>
+                <li><a href="/logins">Login</a></li>
+                <li><a href='/register'>Register</a></li>
+            </ul>
+    </header>
+
+    <div class ="bodytext">
+        <h1 class = "headerhome">Environment Monitoring</h1>
+        <p class="p1">Make you and your student more comfortable in the environemt you are learning<br>
+        Make sure to open windows or air conditioners if temperature gets to hot or cold</p>
+    </div>
+
+
+    <!--<section>
+        <img src = "static/images/co2.jpg" id="co2">
+    </section>
+
+    <script>
+        let co2 = document.getElementById('c02');
+
+
+
+        function doSomething(value){
+            co2.style.top = value * 0.3 +'px';
+        }
+
+        let lastKnownScrollPosition = 0;
+        let ticking = false;
+
+        document.addEventListener('scroll', function(e) {
+            lastKnownScrollPosition = window.scrollY;
+
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    doSomething(lastKnownScrollPosition);
+                    ticking = false;
+                });
+
+                ticking = true;
+            }
+        });
+    </script>-->
+
+    
+
+</body>
+</html>

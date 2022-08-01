@@ -1,0 +1,25 @@
+<!--This is the login page for my website-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--Stylecss are linked in head-->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={{url_for('static',filename='login.css')}}>
+    <title>Environemt Login</title>
+</head>
+<body>
+    <section class = "login-section">
+        <h1> Login page</h1>
+            <!--Action Methods for register page linked to the app route of logins-->
+            <form class="login-form" action="http://127.0.0.1:5000/logins"method="POST"> 
+                <p>Username:<input type="text" name="name"/></p>
+                <p>PassWord:<input type="text" name="passWord"/></p>
+                <p><input type="submit" name="enter"></p>
+            </form>
+    </section>    
+</body>
+</html>
+

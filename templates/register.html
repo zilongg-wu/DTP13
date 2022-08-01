@@ -1,0 +1,83 @@
+<!--This html codes for the register page-->
+<!--Created By Zilong Wu on the 5th of July 2022-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--Stylecss are linked in head-->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={{url_for('static',filename='register.css')}}>
+    <title>Environmental Sensor</title>
+</head>
+    <body>
+
+        <h1>Environmental Sensor Data</h1>
+
+        <!--There error messages for following data if user accidently forgot to enter data "Please enter this field"<-->
+        {% for message in form.name.errors%}
+        <div>{{message}}</div>
+        {%endfor%}
+        {% for message in form.phoneNumber.errors%}
+        <div>{{message}}</div>
+        {%endfor%}
+        {% for message in form.passWord.errors%}
+        <div>{{message}}</div>
+        {%endfor%} 
+
+        <!--Action Methods for register page linked to the app route of-->
+        <form action="http://127.0.0.1:5000/register" method ='POST'>
+
+            {{ form.hidden_tag() }} <!--Prevent From CSRF Attack forced chaning email etc-->
+
+        <div class = "table-section">
+            <table>
+
+                <tr>
+                    <td>{{form.name.label}}</td> <!--Assign label for text field, in this case username -->
+                    <td>{{form.name}}</td> <!--Text Field in this case for username-->
+                </tr>
+
+                <tr>
+                    <td>{{form.passWord.label}}</td><!--Assign label for text field, in this case passWord -->
+                    <td>{{form.passWord}}</td><!--Text Field in this case for passWord-->
+                </tr>
+
+                <tr>
+                    <td>{{form.email.label}}</td>
+                    <td>{{form.email}}</td>
+                </tr>
+                
+                
+                <tr>
+                    <td>{{form.phoneNumber.label}}</td>
+                    <td>{{form.phoneNumber}}</td>
+                </tr>
+
+                <tr>
+                    <td>Gender</td>
+                    <td>{{form.gender(class="gender-options")}}</td>
+
+                
+                </tr>
+
+                <tr>
+                    <td>{{form.address.label}}</td>
+                    <td>{{form.address}}</td>
+                </tr>
+
+                <tr>
+                    <td>{{form.age.label}}</td>
+                    <td>{{form.age}}</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>{{form.submit(class = "anchor-button")}}</td>
+                </tr>
+            </table>
+        </div>
+        </form>
+    </body>
+</html>

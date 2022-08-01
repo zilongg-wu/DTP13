@@ -1,0 +1,24 @@
+<!--This is the successful submission page for my website-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width= , initial-scale=1.0">
+    <title>Sensor Web</title>
+</head>
+<body>
+
+    <!--The for action is linked to my successsubmission app.route-->
+    <form action ="http://127.0.0.1:5000/successformsubmission" method='post'></form> 
+
+    <h1> Welcome {{ session['name'] }} Environmental In Relation To Student Learning Registeration successfully completed</h1> <!--Prints the name of the person successfully registered-->
+
+    <div class="header-menu-section">
+        <!--Button for user to click back to home or login-->
+        <p><a class = "anchor-button" href ="{{url_for('home')}}">Home</a></p>
+        <p><a class = "anchor-button" href ="{{url_for('logins')}}">Login</a></p>
+    </div>
+
+</body>
+</html>
