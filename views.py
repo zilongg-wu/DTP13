@@ -1,6 +1,7 @@
 # This code was created by Zilong Wu on the 01/08/2022
 
 
+# All imports
 from flask import (
     Blueprint,
     render_template,
@@ -24,10 +25,13 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 
+
+# Blueprints for different routes
 auth = Blueprint("auth", __name__)
 views = Blueprint("views", __name__)
 
 
+# Database name
 db = SQLAlchemy()
 DB_NAME = "sensor.db"
 
@@ -130,6 +134,8 @@ def logout():
     return redirect(url_for("views.home"))
 
 
+# Models
+# User Model
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
