@@ -23,11 +23,14 @@ body{
     transform:translateY(150px);  
 }
 
-.h3{
+.h1{
     text-align: center;
+    transform:translateY(100px);  
 }
 
 .form-group{
+    transform:translateY(150px);  
+    font-size: 30px;
     text-align: center;
 
     

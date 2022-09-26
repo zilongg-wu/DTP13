@@ -4,6 +4,7 @@ function like(classroomId) {
   const likeCount = document.getElementById(`likes-count-${classroomId}`);
   const likeButton = document.getElementById(`like-button-${classroomId}`);
 
+  /*This is the form submission for the like button using javascript*/
   fetch(`/like-classroom/${classroomId}`, { method: "POST" })
     .then((res) => res.json())
     .then((data) => {
