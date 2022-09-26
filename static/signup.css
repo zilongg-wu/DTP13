@@ -1,3 +1,12 @@
+*
+{
+    margin: 0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'poppins', sans-serif;
+}
+
+
 body{
     background: #acb6e5;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #86fde8, #acb6e5);  /* Chrome 10-25, Safari 5.1-6 */

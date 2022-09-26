@@ -1,3 +1,5 @@
+/*Styling for like button*/
+
 function like(classroomId) {
   const likeCount = document.getElementById(`likes-count-${classroomId}`);
   const likeButton = document.getElementById(`like-button-${classroomId}`);
