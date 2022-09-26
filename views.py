@@ -107,8 +107,12 @@ def sign_up():
             flash('Password don\'t match!', category='error')
         elif len(username) < 2:
             flash('Username is too short.', category='error')
+        elif len(username) > 12:
+            flash('Please make username less than 12 characters', category='error')
         elif len(password1) < 6:
             flash('Password is too short.', category='error')
+        elif len(password1) > 12: 
+            flash('Password is too long, please shorten to less than 12 characters', category='error')
         elif len(email) < 4:
             flash("Email is invalid.", category='error')
         else:
