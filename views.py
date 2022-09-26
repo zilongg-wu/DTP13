@@ -204,6 +204,11 @@ def create_classroom():
 
         if not text:
             flash('Classroom cannot be empty', category='error')
+
+
+        elif len(text) > 100:
+            flash('Please make comment less than 100 characters', category='error')
+
         else:
             classroom = Classroom(text=text, end_user=current_user.id)
             db.session.add(classroom)
@@ -259,6 +264,10 @@ def create_comment(classroom_id):
 
     if not text:
         flash('Comment cannot be empty.', category='error')
+
+    elif len(text) > 100:
+            flash('Please make comment less than 100 characters', category='error')
+    
     else:
         classroom = Classroom.query.filter_by(id=classroom_id)
         if classroom:
