@@ -1,0 +1,17 @@
+/*Style for base.html*/
+
+
+*
+{
+    margin: 0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'poppins', sans-serif;
+}
+
+
+.footer{
+    text-align: center;
+    transform:translateY(300px); 
+
+}

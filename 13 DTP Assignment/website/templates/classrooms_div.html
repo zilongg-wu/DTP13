@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<!--This code is created by Zilong Wu on the 01/08/2022 -->
+<!--This is the code for classrooms_div.html-->
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classroom_div</title>
+</head>
+<body>
+
+
+  {# This extend sto the base.html #}
+  {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+    
+    
+    
+    <!-- This setup for like comment user posted and to delete a classroom a user would like to delete-->
+    <h1 class = "header">{% block header %}Classroom Comments{% endblock %}</h1>
+    <div id="classrooms">
+      {% for classroom in classrooms %}
+      <div class="card border-dark">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <a href="/classrooms/{{classroom.user.username}}">{{classroom.user.username}}</a>
+          <div>
+            {# CLicking the like button increases the number beside the likes #}
+            <span id="likes-count-{{classroom.id}}">
+            {{ classroom.likes|length }}</span> 
+            {% if user.id in classroom.likes|map(attribute="end_user")|list %}
+            <i
+              class="fas fa-thumbs-up"
+              id="like-button-{{classroom.id}}"
+              onclick="like({{classroom.id}})"
+            ></i>
+            {% else %}
+            <i
+              class="far fa-thumbs-up"
+              id="like-button-{{classroom.id}}"
+              onclick="like({{classroom.id}})"
+            ></i>
+            {% endif %} {% if user.id == classroom.end_user %}
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-sm btn-primary dropdown-toggle"
+                data-bs-toggle="dropdown"
+              ></button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="/delete-classroom/{{classroom.id}}" class="dropdown-item"
+                    >Delete</a
+                  >
+                </li>
+              </ul>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-text">{{classroom.text}}</div>
+          <br />
+          <div class="collapse" id="comments-{{classroom.id}}">
+            <div class="card">
+              <div class="card-body" id="comments-expanded-{{classroom.id}}">
+                {% for comment in classroom.comments %}
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <a href="/classrooms/{{comment.user.username}}"
+                      >{{comment.user.username}}</a
+                    >: {{comment.text}}
+                  </div>
+                  <div>
+                    <small class="text-muted"> {{comment.date_created}}</small>
+                    
+                    {# That a user are able to delete the comment of only their own #}
+                    {% if user.id == comment.end_user or user.id == classroom.end_user %}
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-primary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                      ></button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a
+                            href="/delete-comment/{{comment.id}}"
+                            class="dropdown-item"
+                            >Delete</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <p class="card-text">
+            {% if classroom.comments|length > 0 %}
+            <a data-bs-toggle="collapse" href="#comments-{{classroom.id}}" role="button">
+              <small>View {{classroom.comments|length}} Comments</small>
+            </a>
+            {% else %}
+            <small class="text-muted">No Comments Seen Yet!!</small>
+            {% endif %}
+          </p>
+          <form
+            class="input-group mb-3"
+            method="POST"
+            action="/create-comment/{{classroom.id}}"
+          >
+
+          <!--This is the input box where other user can enter the comment-->
+            <input
+              type="text"
+              id="text"
+              name="text"
+              class="form-control"
+              placeholder="Comment Something Here!!!!"
+            />
+            <button type="submit" class="btn btn-primary">Enter</button>
+          </form>
+        </div>
+        <div class="card-footer text-muted">{{classroom.date_created}}</div>
+      </div>
+      <br > {% endfor %}
+    </div>
+    {% block footer %}
+    <div class ="center">
+      <a href="/create-classroom"
+        ><button type="button" class="btn btn-primary btn-lg">
+          Create a Classroom Comment
+        </button></a
+      >
+    </div>
+    {% endblock %} {% endblock %}
+    
+</body>
+</html>
+
+
+
+
+
+
+
+

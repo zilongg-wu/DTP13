@@ -1,0 +1,31 @@
+/*Style for signup.html*/
+
+
+*
+{
+    margin: 0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'poppins', sans-serif;
+}
+
+
+body{
+    background: #acb6e5;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #86fde8, #acb6e5);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #86fde8, #acb6e5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.h3{
+    text-align: center;
+    transform:translateY(50px);  
+
+}
+
+.form-group{
+    text-align: center;
+    transform:translateY(100px);  
+
+}
+

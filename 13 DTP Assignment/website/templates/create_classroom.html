@@ -1,0 +1,41 @@
+<!--This code is created by Zilong Wu on the 01/08/2022 -->
+<!--This is the code for create_classrooms.html-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href={{url_for('static',filename='createclassroom.css')}}>
+  <title>Create classroom comm.html</title>
+</head>
+<body>
+
+  {# extends to the base html#}
+  {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+    <h1 class = "h1">Please Make a Classroom Comment</h1>
+    
+    <!--This is the form method for creating a classroom comment-->
+    <form method="POST">
+      <textarea name="text" id="text" class="form-control"></textarea>
+      <br />
+      <div class = "BSub">
+        <button type="submit" class="btn btn-lg btn-primary">Create Classroom Comment</button>
+      </div>
+    </form>
+    <br />
+    <div class = "Bbutton" >
+      <a href="/home"
+        ><button type="button" class="btn btn-lg btn-secondary">Back</button></a
+      >
+    </div>
+    {% endblock %}
+    
+  
+</body>
+</html>
+
+

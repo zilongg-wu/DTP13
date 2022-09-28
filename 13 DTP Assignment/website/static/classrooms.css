@@ -1,0 +1,17 @@
+/*Style for classrooms.html*/
+
+
+*
+{
+    margin: 0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'poppins', sans-serif;
+}
+
+
+body{
+    background: #5433ff; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #5433ff, #20bdff, #a5fecb); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #a5fecb, #20bdff, #5433ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
