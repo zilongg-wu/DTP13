@@ -18,12 +18,12 @@ from flask_login import (
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from flask import Blueprint, render_template, redirect, url_for, request, flash
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
-from flask_login import LoginManager
+import models 
 
 
 # Blueprints for different routes
@@ -38,20 +38,32 @@ DB_NAME = "sensor.db"
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sensor.db'
-    app.secret_key = "__privatekey__"
+    app.config['SECRET_KEY'] = "helloworld"
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
+    db.init_app(app)
+
+
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
+    
+    
+    import models 
+
+
+
     create_database(app)
+
+
+
+
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
     login_manager.init_app(app)
 
     @login_manager.user_loader
     def load_user(id):
-        return User.query.get(int(id))
+        return models.User.query.get(int(id))
 
     return app
 
@@ -70,7 +82,7 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
 
-        user = User.query.filter_by(email=email).first()
+        user = models.User.query.filter_by(email=email).first()
         if user:
             # Check sha256 password hashing
             if check_password_hash(user.password, password):
@@ -96,8 +108,8 @@ def sign_up():
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
 
-        email_exists = User.query.filter_by(email=email).first()
-        username_exists = User.query.filter_by(username=username).first()
+        email_exists = models.User.query.filter_by(email=email).first()
+        username_exists = models.User.query.filter_by(username=username).first()
         # If any information already exists then it'll flash error message
         if email_exists:
             flash('Email is already in use.', category='error')
@@ -117,7 +129,7 @@ def sign_up():
             flash("Email is invalid.", category='error')
         else:
             # If no user found password is hashed
-            new_user = User(
+            new_user = models.User(
                 email=email,
                 username=username,
                 password=generate_password_hash(password1, method='sha256'))
@@ -138,59 +150,12 @@ def logout():
     return redirect(url_for("views.home"))
 
 
-# Models
-# User Model
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True)
-    username = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
-    classrooms = db.relationship(
-        'Classroom', backref='user', passive_deletes=True)
-    comments = db.relationship('Comment', backref='user', passive_deletes=True)
-    likes = db.relationship('Like', backref='user', passive_deletes=True)
-
-
-# Classroom Model
-class Classroom(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.Text, nullable=False)
-    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
-    end_user = db.Column(db.Integer, db.ForeignKey(
-        'user.id', ondelete="CASCADE"), nullable=False)
-    comments = db.relationship(
-        'Comment', backref='classroom', passive_deletes=True)
-    likes = db.relationship('Like', backref='classroom', passive_deletes=True)
-
-
-# Comment Model
-class Comment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(35), nullable=False)
-    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
-    end_user = db.Column(db.Integer, db.ForeignKey(
-        'user.id', ondelete="CASCADE"), nullable=False)
-    classroom_id = db.Column(db.Integer, db.ForeignKey(
-        'classroom.id', ondelete="CASCADE"), nullable=False)
-
-
-# Like Model
-class Like(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
-    end_user = db.Column(db.Integer, db.ForeignKey(
-        'user.id', ondelete="CASCADE"), nullable=False)
-    classroom_id = db.Column(db.Integer, db.ForeignKey(
-        'classroom.id', ondelete="CASCADE"), nullable=False)
-
-
 # User View routes
 @views.route("/")
 @views.route("/home")
 @login_required
 def home():
-    classrooms = Classroom.query.all()
+    classrooms = models.Classroom.query.all()
     return render_template(
         "home.html", user=current_user, classrooms=classrooms)
 
@@ -210,7 +175,7 @@ def create_classroom():
             flash('Please make comment less than 100 characters', category='error')
 
         else:
-            classroom = Classroom(text=text, end_user=current_user.id)
+            classroom = models.Classroom(text=text, end_user=current_user.id)
             db.session.add(classroom)
             db.session.commit()
             flash('Classroom created!', category='success')
@@ -224,16 +189,17 @@ def create_classroom():
 @views.route("/delete-classroom/<id>")
 @login_required
 def delete_classroom(id):
-    classroom = Classroom.query.filter_by(id=id).first()
+    classroom = models.Classroom.query.filter_by(id=id).first()
 
     if not classroom:
         flash("Classroom does not exist.", category='error')
-    elif current_user.id != classroom.id:
-        flash(
-            'You do not have permission to delete this classroom.',
-            category='error')
+
+ 
     else:
-        db.session.delete(classroom)
+        classroom = models.Classroom.query.filter_by(id=id).first()
+        current_delete = db.session.merge(classroom)
+        
+        db.session.delete(current_delete)
         db.session.commit()
         flash('Classroom deleted.', category='success')
 
@@ -243,7 +209,7 @@ def delete_classroom(id):
 @views.route("/classrooms/<username>")
 @login_required
 def classrooms(username):
-    user = User.query.filter_by(username=username).first()
+    user = models.User.query.filter_by(username=username).first()
 
     if not user:
         flash('No user with that username exists.', category='error')
@@ -269,12 +235,13 @@ def create_comment(classroom_id):
             flash('Please make comment less than 100 characters', category='error')
     
     else:
-        classroom = Classroom.query.filter_by(id=classroom_id)
+        classroom = models.Classroom.query.filter_by(id=classroom_id)
         if classroom:
-            comment = Comment(
+            comment = models.Comment(
                 text=text, end_user=current_user.id, classroom_id=classroom_id)
             db.session.add(comment)
             db.session.commit()
+            flash('Comment Successfully Added')
         else:
             flash('classroom does not exist.', category='error')
 
@@ -284,18 +251,21 @@ def create_comment(classroom_id):
 @views.route("/delete-comment/<comment_id>")
 @login_required
 def delete_comment(comment_id):
-    comment = Comment.query.filter_by(id=comment_id).first()
+    comment = models.Comment.query.filter_by(id=comment_id).first()
+    existing_object = db.session.merge(comment)
 
     if not comment:
         flash(
             'Comment does not exist.', category='error')
+            
     elif current_user.id != comment.end_user and current_user.id != comment.classroom.end_user:
         flash(
             'You do not have permission to delete this comment.',
             category='error')
     else:
-        db.session.delete(comment)
+        db.session.delete(existing_object)
         db.session.commit()
+        flash('Comment Successfully Deleted')
 
     return redirect(url_for('views.home'))
 
@@ -304,18 +274,23 @@ def delete_comment(comment_id):
 @views.route("/like-classroom/<classroom_id>", methods=['POST'])
 @login_required
 def like(classroom_id):
-    classroom = Classroom.query.filter_by(id=classroom_id).first()
-    like = Like.query.filter_by(
+    classroom = models.Classroom.query.filter_by(id=classroom_id).first()
+    like = models.Like.query.filter_by(
         end_user=current_user.id, classroom_id=classroom_id).first()
-
+    
     if not classroom:
         return jsonify(
             {'error': 'classroom does not exist.'}, 400)
+
     elif like:
-        db.session.delete(like)
+        current_like = db.session.merge(like)
+        db.session.delete(current_like)
         db.session.commit()
+
     else:
-        like = Like(end_user=current_user.id, classroom_id=classroom_id)
+        like = models.Like.query.filter_by(
+        end_user=current_user.id, classroom_id=classroom_id).first()
+        like = models.Like(end_user=current_user.id, classroom_id=classroom_id)
         db.session.add(like)
         db.session.commit()
 
@@ -324,9 +299,9 @@ def like(classroom_id):
 
 
 @views.errorhandler(404)
-def page_not_found(e):
-    # note that we set the 404 status explicitly
-    return render_template('404.html')
+def page_not_found(error):
+    """Error page."""
+    return render_template("404.html")
 
 
 # Runs the website
