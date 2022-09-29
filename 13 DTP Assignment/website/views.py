@@ -10,6 +10,7 @@ from flask import (
     redirect,
     url_for,
     jsonify,
+    render_template_string
 )
 from flask_login import (
     login_required,
@@ -34,6 +35,8 @@ views = Blueprint("views", __name__)
 # Database name
 db = SQLAlchemy()
 DB_NAME = "sensor.db"
+
+import models 
 
 
 def create_app():
@@ -84,7 +87,7 @@ def login():
                 # If password wrong it'll flash message
                 flash('Password is incorrect.', category='error')
         else:
-            flash('Email does not exist.', category='error')
+            flash('Email does not exist. Please register if you havent signed up before', category='error')
 
     return render_template("login.html", user=current_user)
 
@@ -103,7 +106,7 @@ def sign_up():
         username_exists = models.User.query.filter_by(username=username).first()
         # If any information already exists then it'll flash error message
         if email_exists:
-            flash('Email is already in use.', category='error')
+            flash('Email is already in use, please sign up using a different email or login using login page.', category='error')
         elif username_exists:
             flash('Username is already in use.', category='error')
         elif password1 != password2:
@@ -194,7 +197,6 @@ def delete_classroom(id,classroom_id):
         db.session.delete(current_delete)
         db.session.commit()
         flash('Classroom comment deleted.', category='success')
-
     return redirect(url_for('views.home'))
 
 
@@ -215,6 +217,7 @@ def classrooms(username):
         username=username)
 
 
+# Allows the user to create the comment 
 @views.route("/create-comment/<classroom_id>", methods=['POST'])
 @login_required
 def create_comment(classroom_id):
@@ -222,10 +225,8 @@ def create_comment(classroom_id):
 
     if not text:
         flash('Comment cannot be empty.', category='error')
-
     elif len(text) > 100:
             flash('Please make comment less than 100 characters', category='error')
-    
     else:
         classroom = models.Classroom.query.filter_by(id=classroom_id)
         if classroom:
@@ -236,10 +237,10 @@ def create_comment(classroom_id):
             flash('Comment Successfully Added')
         else:
             flash('classroom does not exist.', category='error')
-
     return redirect(url_for('views.home'))
 
 
+# Allows user to delete only their comment and no one elses
 @views.route("/delete-comment/<comment_id>")
 @login_required
 def delete_comment(comment_id):
@@ -290,10 +291,10 @@ def like(classroom_id):
         {"likes": len(classroom.likes), "liked": current_user.id in map(lambda x: x.end_user, classroom.likes)})
 
 
-@views.errorhandler(404)
-def page_not_found(e):
-    """Error page."""
-    return render_template("404.html"),404
+# Error handler for 404 error (This returns 404.html instead of standard 404.html)
+@views.app_errorhandler(404)
+def error404(error):
+    return render_template('404.html', title='Error'), 404
 
 
 # Runs the website

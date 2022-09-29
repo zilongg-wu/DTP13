@@ -1,5 +1,7 @@
 /*Styling for like button*/
 
+
+/*This code allows user to be able to like number increase and unlike number decrease*/
 function like(classroomId) {
   const likeCount = document.getElementById(`likes-count-${classroomId}`);
   const likeButton = document.getElementById(`like-button-${classroomId}`);

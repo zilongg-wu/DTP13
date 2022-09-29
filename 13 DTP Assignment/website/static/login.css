@@ -19,21 +19,20 @@ body{
     background: linear-gradient(to right, #C06C84, #6C5B7B, #355C7D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-
 .everything{
     transform:translateY(150px);  
 }
-
 
 .h1{
     text-align: center;
     transform:translateY(100px);  
 }
 
-
 .form-group{
     transform:translateY(150px);  
     font-size: 30px;
-    text-align: center; 
+    text-align: center;
+
+    
 }
 

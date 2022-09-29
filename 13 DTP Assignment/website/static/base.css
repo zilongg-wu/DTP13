@@ -1,4 +1,4 @@
-/*Style for base.html*/
+/*This is the style sheet for the base.html*/
 
 
 *
@@ -9,7 +9,7 @@
     font-family:'poppins', sans-serif;
 }
 
-
+/*Style for the footer copy right*/
 .footer{
     text-align: center;
     transform:translateY(300px); 
